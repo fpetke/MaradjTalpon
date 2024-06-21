@@ -91,13 +91,13 @@ class MaradjTalpon:
 
     def create_question_slide(self, question_id: int) -> None:
         """
-        The function `create_question_slide` creates a PowerPoint slide with a question by replacing
-        certain text runs with underscores for a fill-in-the-blank style question.
+        The function creates a question slide by replacing a portion of the text with underscores and
+        underlines in a PowerPoint presentation.
         
-        :param question_id: The `question_id` parameter in the `create_question_slide` method is an
-        integer that represents the unique identifier of the question for which you want to create a
-        question slide. This identifier is used to retrieve the necessary information or content related
-        to the specific question within the presentation
+        :param question_id: The `question_id` parameter is an integer that represents the unique
+        identifier of the question for which you want to create a question slide. This identifier is
+        used to retrieve the question content and format it into a slide with certain text runs modified
+        to be blank for the user to fill in
         :type question_id: int
         """
         txFrame = self.create_answer_slide(question_id)
@@ -109,6 +109,8 @@ class MaradjTalpon:
 
         ratio_to_make_blank = 0.6
         N_to_choose = np.max([1, int(math.ceil(len(runs_to_choose) * ratio_to_make_blank))])
+        if N_to_choose > len(runs_to_choose):
+            N_to_choose = len(runs_to_choose)
         chosen_runs = np.random.choice(runs_to_choose, N_to_choose, replace=False)
 
         for run in chosen_runs:
@@ -223,7 +225,7 @@ class MaradjTalpon:
 
 
 def main():
-    max_num_questions = 100 # just in case it wasn't specified as a command line argument
+    max_num_questions = 1000 # just in case it wasn't specified as a command line argument
     pres = MaradjTalpon(int(sys.argv[1]) if len(sys.argv) == 2 else max_num_questions)
 
     pres.save_pptx('MaradjTalpon.pptx')
