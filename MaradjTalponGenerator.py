@@ -91,11 +91,13 @@ class MaradjTalpon:
 
     def create_question_slide(self, question_id: int) -> None:
         """
-        The function creates a question slide by replacing a portion of the text with underscores and
-        underlines in a PowerPoint presentation.
+        The function `create_question_slide` creates a PowerPoint slide with a question by replacing
+        certain text runs with underscores for a fill-in-the-blank style question.
         
-        :param question_id: The `question_id` parameter is an integer that represents the unique
-        identifier of the question for which you want to create a question slide
+        :param question_id: The `question_id` parameter in the `create_question_slide` method is an
+        integer that represents the unique identifier of the question for which you want to create a
+        question slide. This identifier is used to retrieve the necessary information or content related
+        to the specific question within the presentation
         :type question_id: int
         """
         txFrame = self.create_answer_slide(question_id)
@@ -105,8 +107,9 @@ class MaradjTalpon:
             if not (run.text in string.punctuation or run.text == '⎵' or run.text == ' '):
                 runs_to_choose.append(run)
 
-        ratio_to_make_blank = 0.5
-        chosen_runs = np.random.choice(runs_to_choose, int(math.ceil(len(runs_to_choose) * ratio_to_make_blank)))
+        ratio_to_make_blank = 0.6
+        N_to_choose = np.max([1, int(math.ceil(len(runs_to_choose) * ratio_to_make_blank))])
+        chosen_runs = np.random.choice(runs_to_choose, N_to_choose, replace=False)
 
         for run in chosen_runs:
             run.text = '_'
