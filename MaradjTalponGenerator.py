@@ -225,7 +225,7 @@ class MaradjTalpon:
 
 
 def main():
-    max_num_questions = 1000 # just in case it wasn't specified as a command line argument
+    max_num_questions = 100 # just in case it wasn't specified as a command line argument
     pres = MaradjTalpon(int(sys.argv[1]) if len(sys.argv) == 2 else max_num_questions)
 
     pres.save_pptx('MaradjTalpon.pptx')
