@@ -4,7 +4,7 @@ from typing import List, Dict, Tuple
 import numpy as np
 import sys
 import string
-import math
+
 
 class MaradjTalpon:
     question_dir: str = "kerdesek"
@@ -14,12 +14,30 @@ class MaradjTalpon:
     question_ids: np.ndarray = None
 
 
-    def __init__(self, max_num_questions: int, question_dir = None) -> None:
+    def __init__(self, max_num_questions: int, ratio_to_make_blank: float = 0.6, question_dir = None) -> None:
+        """
+        This function initializes a class instance with parameters for maximum number of questions,
+        ratio to make questions blank, and question directory.
+        
+        :param max_num_questions: The `max_num_questions` parameter specifies the maximum number of
+        questions to be included in the presentation
+        :type max_num_questions: int
+        :param ratio_to_make_blank: The `ratio_to_make_blank` parameter represents the proportion of
+        questions that will have blanks created for answers. For example, if `ratio_to_make_blank` is
+        set to 0.6, it means that 60% of the questions will have blanks created for answers
+        :type ratio_to_make_blank: float
+        :param question_dir: The `question_dir` parameter in the `__init__` method is used to specify
+        the directory where the questions are stored. If the `question_dir` is provided (not None), it
+        will be assigned to the `self.question_dir` attribute for later use in loading questions and
+        answers from that
+        """
         if not question_dir is None:
             self.question_dir = question_dir
 
         self.load_questions_answers()
-        self.max_num_questions = (max_num_questions if max_num_questions < self.question_ids.size else self.question_ids.size)
+        self.max_num_questions = np.min([max_num_questions, self.question_ids.size])
+
+        self.ratio_to_make_blank = ratio_to_make_blank
 
         self.root = pptx.Presentation()
         self.create_title_slide()
@@ -107,8 +125,7 @@ class MaradjTalpon:
             if not (run.text in string.punctuation or run.text == '⎵' or run.text == ' '):
                 runs_to_choose.append(run)
 
-        ratio_to_make_blank = 0.6
-        N_to_choose = np.max([1, int(math.ceil(len(runs_to_choose) * ratio_to_make_blank))])
+        N_to_choose = np.max([1, int(np.ceil(len(runs_to_choose) * self.ratio_to_make_blank))])
         if N_to_choose > len(runs_to_choose):
             N_to_choose = len(runs_to_choose)
         chosen_runs = np.random.choice(runs_to_choose, N_to_choose, replace=False)
