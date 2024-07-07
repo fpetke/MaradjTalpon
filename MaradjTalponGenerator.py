@@ -132,7 +132,6 @@ class MaradjTalpon:
 
         for run in chosen_runs:
             run.text = '_'
-            run.font.underline = pptx.enum.text.MSO_UNDERLINE.SINGLE_LINE
             run.font.color.rgb = pptx.dml.color.RGBColor(242, 7, 7)
 
     def create_answer_slide(self, question_id: int) -> pptx.text.text.TextFrame:
